@@ -1,4 +1,4 @@
-package internal
+package tf
 
 import (
 	"fmt"
@@ -22,12 +22,20 @@ func (rc ResourceChanges) ByAction() (
 	return
 }
 
+type ChangeType int
+
+const (
+	OutsideChange ChangeType = iota
+	ActionChange
+)
+
 type ResourceChange struct {
-	Address string
-	Type    string
-	Name    string
-	Actions Actions
-	Diff    string
+	Type         ChangeType
+	Address      string
+	ResourceType string
+	Name         string
+	Actions      Actions
+	Diff         string
 }
 
 type Action string

@@ -1,0 +1,30 @@
+[0m[1maws_iam_policy.policy: Refreshing state... [id=arn:aws:iam::941738800554:policy/test_policy][0m
+[0m[1maws_iam_policy.policy3: Refreshing state... [id=arn:aws:iam::941738800554:policy/new_test_policy_3][0m
+[0m[1maws_iam_policy.policy2: Refreshing state... [id=arn:aws:iam::941738800554:policy/test_policy_2][0m
+[0m[1maws_iam_policy.policy4: Refreshing state... [id=arn:aws:iam::941738800554:policy/test_policy_4][0m
+[0m
+[1m[36mNote:[0m[1m Objects have changed outside of Terraform[0m
+
+[0mTerraform detected the following changes made outside of Terraform since the
+last "terraform apply":
+
+[1m  # aws_iam_policy.policy3[0m has changed[0m[0m
+[0m  [33m~[0m[0m resource "aws_iam_policy" "policy3" {
+        [1m[0mid[0m[0m          = "arn:aws:iam::941738800554:policy/new_test_policy_3"
+        [1m[0mname[0m[0m        = "new_test_policy_3"
+      [32m+[0m [0m[1m[0mtags[0m[0m        = {}
+        [90m# (6 unchanged attributes hidden)[0m[0m
+    }
+
+
+Unless you have made equivalent changes to your configuration, or ignored the
+relevant attributes using ignore_changes, the following plan may include
+actions to undo or respond to these changes.
+[90m
+─────────────────────────────────────────────────────────────────────────────[0m
+
+[0m[1m[32mNo changes.[0m[1m Your infrastructure matches the configuration.[0m
+
+[0mYour configuration already matches the changes detected above. If you'd like
+to update the Terraform state to match, create and apply a refresh-only plan:
+  terraform apply -refresh-only

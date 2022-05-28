@@ -8,7 +8,9 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/go-errors/errors"
-	"github.com/hamdanjaveed/terraform-inspector/internal"
+	"github.com/hamdanjaveed/terraform-inspector/internal/parser"
+	"github.com/hamdanjaveed/terraform-inspector/internal/tui"
+	"golang.org/x/term"
 )
 
 func main() {
@@ -24,22 +26,20 @@ func run() error {
 		return errors.Wrap(err, 0)
 	}
 
-	os, as, s, err := internal.Parse(string(b))
+	cs, s, err := parser.Parse(string(b))
+	if err != nil {
+		return errors.Wrap(err, 0)
+	}
+
+	w, h, err := term.GetSize(int(os.Stdout.Fd()))
 	if err != nil {
 		return errors.Wrap(err, 0)
 	}
 
 	p := tea.NewProgram(
-		internal.Bubble{
-			OutsideChanges: os,
-			Actions:        as,
-			Summary:        s,
-			ShowingDetail:  nil,
-			Cursor:         -1,
-			// Selected:       make(map[int]struct{}),
-		},
+		tui.NewBubble(cs, s, w, 0, h, 0),
 		tea.WithAltScreen(),
-		tea.WithMouseCellMotion(),
+		// tea.WithMouseCellMotion(),
 	)
 	if err := p.Start(); err != nil {
 		return errors.Wrap(err, 0)
