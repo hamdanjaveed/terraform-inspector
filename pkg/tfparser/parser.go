@@ -9,8 +9,10 @@ import (
 
 var tfPlanLexer = lexer.MustSimple([]lexer.SimpleRule{
 	{Name: `OutsideChanges`, Pattern: `Terraform\s+detected\s+the\s+following\s+changes\s+made\s+outside\s+of\s+Terraform\s+since\s+the\s+last\s+"terraform apply":`},
-	{Name: `ws`, Pattern: `[ ]+`},
+	{Name: `ws`, Pattern: `[ ]`},
+	{Name: `Resource`, Pattern: `resource`},
 	{Name: `Any`, Pattern: `[\s\S]*`},
+	{Name: `Change`, Pattern: `~|-\/\+|-|\+|<=`},
 })
 
 var tfParser = participle.MustBuild(
@@ -19,13 +21,15 @@ var tfParser = participle.MustBuild(
 )
 
 type Plan struct {
-	Before         string `@Any`
-	OutsideChanges string `@OutsideChanges`
-	After          string `@Any`
-	// Resources []*Resource
+	// OutsideChanges          string      `parser:"(@OutsideChanges"`
+	// OutsideChangedResources []*Resource `parser:"@@+)?"`
+	Resources []*Resource `parser:"@@*"`
 }
 
 type Resource struct {
+	Change string `parser:"@Change"`
+	Name   string `parser:"@Resource"`
+	Diff   string `parser:""`
 }
 
 func Parse(r io.Reader) (*Plan, error) {
